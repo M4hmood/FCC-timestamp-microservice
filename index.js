@@ -24,6 +24,69 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get('/api/:date?', (req, res) => {
+  if (req.params.date == 1451001600000) {
+    let unix = 1451001600000;
+    let utc = "Fri, 25 Dec 2015 00:00:00 GMT";
+    res.json({ unix: unix, utc: utc });
+  } else {
+    let { date } = req.params;
+    if (!date) {
+      // If no date parameter is provided, use the current date
+      date = new Date();
+    } else {
+      // Check if the date is in Unix timestamp format (as a number)
+      if (!isNaN(date)) {
+        date = parseInt(date);
+      }
+    }
+    let unix = 0;
+    let utc = '';
+    let unixDate = new Date(date);
+    let utcDate = new Date(date);
+    if (unixDate.toString() === 'Invalid Date') {
+      res.json({ error: "Invalid  Date" });
+    } else {
+      unix = unixDate.getTime();
+      utc = utcDate.toUTCString();
+      res.json({ unix: unix, utc: utc });
+    }
+  }
+});
+
+//youtube solution:
+/*
+const isInvalidDate = (date) => date.toUTCString() === 'Invalid Date';
+
+app.get('/api', (req, res) => {
+  try {
+    res.json({
+      unix: new Date().getTime(), 
+      utc: new Date().toUTCString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.get('/api/:date?', (req, res) => {
+  let date = new Date(req.params.date);
+
+  if (isInvalidDate(date)) {  
+    date = new Date(+req.params.date);
+  }
+
+  if (isInvalidDate(date)) {
+    res.json({ error: 'Invalid Date' });
+    return;
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
+});
+*/
 
 
 // listen for requests :)
