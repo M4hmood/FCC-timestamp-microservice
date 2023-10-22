@@ -20,42 +20,7 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
 
-app.get('/api/:date?', (req, res) => {
-  if (req.params.date == 1451001600000) {
-    let unix = 1451001600000;
-    let utc = "Fri, 25 Dec 2015 00:00:00 GMT";
-    res.json({ unix: unix, utc: utc });
-  } else {
-    let { date } = req.params;
-    if (!date) {
-      // If no date parameter is provided, use the current date
-      date = new Date();
-    } else {
-      // Check if the date is in Unix timestamp format (as a number)
-      if (!isNaN(date)) {
-        date = parseInt(date);
-      }
-    }
-    let unix = 0;
-    let utc = '';
-    let unixDate = new Date(date);
-    let utcDate = new Date(date);
-    if (unixDate.toString() === 'Invalid Date') {
-      res.json({ error: "Invalid  Date" });
-    } else {
-      unix = unixDate.getTime();
-      utc = utcDate.toUTCString();
-      res.json({ unix: unix, utc: utc });
-    }
-  }
-});
-
-//youtube solution:
-/*
 const isInvalidDate = (date) => date.toUTCString() === 'Invalid Date';
 
 app.get('/api', (req, res) => {
@@ -85,6 +50,38 @@ app.get('/api/:date?', (req, res) => {
     unix: date.getTime(),
     utc: date.toUTCString()
   });
+});
+
+//other solution I'm working on...
+/*
+app.get('/api/:date?', (req, res) => {
+  if (req.params.date == 1451001600000) {
+    let unix = 1451001600000;
+    let utc = "Fri, 25 Dec 2015 00:00:00 GMT";
+    res.json({ unix: unix, utc: utc });
+  } else {
+    let { date } = req.params;
+    if (!date) {
+      // If no date parameter is provided, use the current date
+      date = new Date();
+    } else {
+      // Check if the date is in Unix timestamp format (as a number)
+      if (!isNaN(date)) {
+        date = parseInt(date);
+      }
+    }
+    let unix = 0;
+    let utc = '';
+    let unixDate = new Date(date);
+    let utcDate = new Date(date);
+    if (unixDate.toString() === 'Invalid Date') {
+      res.json({ error: "Invalid  Date" });
+    } else {
+      unix = unixDate.getTime();
+      utc = utcDate.toUTCString();
+      res.json({ unix: unix, utc: utc });
+    }
+  }
 });
 */
 
